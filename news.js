@@ -57,10 +57,18 @@ async function loadNewsDetails() {
 
     if (data.image_url) {
         const image = document.createElement("img");
-        image.src = data.image_url;
-        image.alt = data.title;
-        image.className = "news-details-image";
-        article.appendChild(image);
+image.src = data.image_url;
+image.alt = data.title;
+image.className = "news-details-image";
+
+image.style.width = "100%";
+image.style.maxWidth = "550px";
+image.style.height = "280px";
+image.style.objectFit = "contain";
+image.style.display = "block";
+image.style.margin = "20px auto";
+
+article.appendChild(image);
     }
 
     const content = document.createElement("p");
