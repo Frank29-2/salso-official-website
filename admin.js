@@ -21,6 +21,7 @@ const newsForm = document.getElementById("news-form");
 const newsList = document.getElementById("news-list");
 
 let editingNewsId = null;
+let currentImageUrl = null;
 
 // 3. CHECK WHETHER USER IS AN APPROVED ADMIN
 async function verifyAdmin() {
@@ -134,13 +135,14 @@ function escapeHTML(value) {
     })[character]);
 }
 
+
 // 8. SAVE OR UPDATE NEWS
 newsForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const title = document.getElementById("news-title").value.trim();
     const content = document.getElementById("news-content").value.trim();
-    const image_url = document.getElementById("news-image").value.trim();
+    const imageFile = document.getElementById("news-image").files[0];
     const status = document.getElementById("news-status").value;
 
     if (!title || !content) {
@@ -148,16 +150,59 @@ newsForm.addEventListener("submit", async function(event) {
         return;
     }
 
-    const newsData = {
-        title,
-        content,
-        image_url: image_url || null,
-        status
-    };
-
     const saveButton = document.getElementById("save-news-btn");
     saveButton.disabled = true;
     saveButton.textContent = "Saving...";
+
+    let image_url = currentImageUrl;
+
+    // Upload selected image to Supabase Storage
+    if (imageFile) {
+        if (!imageFile.type.startsWith("image/")) {
+            alert("Please select a valid image.");
+            saveButton.disabled = false;
+            saveButton.textContent = "Save News";
+            return;
+        }
+
+        if (imageFile.size > 5 * 1024 * 1024) {
+            alert("Image must not exceed 5MB.");
+            saveButton.disabled = false;
+            saveButton.textContent = "Save News";
+            return;
+        }
+
+        const extension = imageFile.name.split(".").pop()
+            .toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+
+        const filePath = `${Date.now()}.${extension}`;
+
+        const { error: uploadError } = await supabaseClient
+            .storage
+            .from("news-images")
+            .upload(filePath, imageFile);
+
+        if (uploadError) {
+            alert("Image upload failed: " + uploadError.message);
+            saveButton.disabled = false;
+            saveButton.textContent = "Save News";
+            return;
+        }
+
+        const { data: publicData } = supabaseClient
+            .storage
+            .from("news-images")
+            .getPublicUrl(filePath);
+
+        image_url = publicData.publicUrl;
+    }
+
+    const newsData = {
+        title,
+        content,
+        image_url,
+        status
+    };
 
     let result;
 
@@ -185,6 +230,8 @@ newsForm.addEventListener("submit", async function(event) {
     await loadNews();
 });
 
+
+
 // 9. EDIT AND DELETE NEWS
 newsList.addEventListener("click", async function(event) {
     const button = event.target.closest("button[data-action]");
@@ -209,7 +256,7 @@ newsList.addEventListener("click", async function(event) {
 
         document.getElementById("news-title").value = data.title;
         document.getElementById("news-content").value = data.content;
-        document.getElementById("news-image").value = data.image_url || "";
+        currentImageUrl = data.image_url || null;
         document.getElementById("news-status").value = data.status;
 
         document.getElementById("form-heading").textContent = "Edit News";
@@ -238,7 +285,7 @@ newsList.addEventListener("click", async function(event) {
 });
 
 // 10. RESET FORM
-function resetNewsForm() {
+function resetNewsForm() {currentImageUrl = null;
     newsForm.reset();
     editingNewsId = null;
 
