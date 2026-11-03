@@ -1,4 +1,11 @@
+// SUPABASE CONNECTION
+const SUPABASE_URL = "https://pzmtaaliocqxnenfeagv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OQYhWvHhZKaVg8QoXa3eFg_rWO7vDi-";
 
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 /* =================================
    SALSO OFFICIAL WEBSITE
    JavaScript Functionality
