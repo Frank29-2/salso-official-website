@@ -85,16 +85,21 @@ async function loadHomepageNews() {
     ? `<img src="${item.image_url}" alt="${escapeHTML(item.title)}" class="news-image" style="width:100%; height:220px; object-fit:cover; display:block;">`
     : "";
 
-        return `
-            <article class="news-card">
-                ${image}
-                <div class="news-card-content">
-                    <p class="news-date">${escapeHTML(date)}</p>
-                    <h3>${escapeHTML(item.title)}</h3>
-                    <p>${escapeHTML(item.content)}</p>
-                </div>
-            </article>
-        `;
+        
+return `
+    <a href="news.html?id=${encodeURIComponent(item.id)}" class="news-card-link">
+        <article class="news-card">
+            ${image}
+            <div class="news-card-content">
+                <p class="news-date">${escapeHTML(date)}</p>
+                <h3>${escapeHTML(item.title)}</h3>
+                <p>${escapeHTML(item.content)}</p>
+                <span class="read-more">Read Full Story →</span>
+            </div>
+        </article>
+    </a>
+`;
+
     }).join("");
 }
 
