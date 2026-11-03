@@ -82,8 +82,8 @@ async function loadHomepageNews() {
             : "";
 
         const image = item.image_url
-            ? `<img src="${escapeHTML(item.image_url)}" alt="${escapeHTML(item.title)}" class="news-image">`
-            : "";
+    ? `<img src="${item.image_url}" alt="${escapeHTML(item.title)}" class="news-image" style="width:100%; height:220px; object-fit:cover; display:block;">`
+    : "";
 
         return `
             <article class="news-card">
