@@ -604,3 +604,14 @@ return `
 
 loadHomepageNews();
 
+/* FINAL NEWS IMAGE SIZE FIX */
+
+#news-details .news-details-image {
+    width: 100% !important;
+    max-width: 650px !important;
+    height: 320px !important;
+    max-height: 320px !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 20px auto !important;
+}
