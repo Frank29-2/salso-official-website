@@ -615,3 +615,13 @@ loadHomepageNews();
     display: block !important;
     margin: 20px auto !important;
 }
+/* NEWS DETAILS IMAGE ONLY */
+
+.news-details-container .news-details-image {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    object-fit: contain;
+    display: block;
+    margin: 20px auto;
+}
