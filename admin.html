@@ -116,8 +116,15 @@
             <label>News Content</label>
             <textarea id="news-content" required></textarea>
 
-            <label>News Image URL</label>
-            <input type="url" id="news-image" placeholder="https://example.com/image.jpg">
+            <label>Upload News Image</label>
+<input
+    type="file"
+    id="news-image"
+    accept="image/*"
+>
+<p style="font-size:13px;color:#666;">
+    Select an image from your computer.
+</p>
 
             <label>Publication Status</label>
             <select id="news-status">
