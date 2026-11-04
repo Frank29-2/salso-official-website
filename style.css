@@ -677,3 +677,6 @@ loadHomepageNews();
     border-bottom: 1px solid var(--border);
   }
 }
+body {
+  outline: 5px solid red !important;
+}
