@@ -620,3 +620,49 @@ loadHomepageNews();
     display: block !important;
     margin: 20px auto !important;
 }
+
+/* =====================================
+   SALSO MOBILE HAMBURGER MENU
+===================================== */
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 30px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    position: sticky;
+    top: 0;
+    flex-wrap: wrap;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .main-header nav#main-navigation {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0;
+    padding: 10px 0;
+    background: var(--white);
+  }
+
+  .main-header nav#main-navigation.open {
+    display: flex;
+  }
+
+  .main-header nav#main-navigation a {
+    display: block;
+    padding: 13px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+}
