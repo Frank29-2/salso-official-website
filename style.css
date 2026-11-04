@@ -655,3 +655,16 @@ footer a:hover {
 .main-header {
     background: #5B1725 !important;
 }
+/* SALSO HEADER */
+.main-header {
+    background: #5B1725 !important;
+    color: #FFFFFF !important;
+}
+
+.main-header a,
+.main-header h1,
+.main-header h2,
+.main-header p,
+.main-header span {
+    color: #FFFFFF !important;
+}
