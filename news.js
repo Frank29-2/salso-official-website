@@ -6,6 +6,7 @@
 const SUPABASE_URL = "https://pzmtaaliocqxnenfeagv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OQYhWvHhZKaVg8QoXa3eFg_rWO7vDi-";
 
+
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
@@ -17,8 +18,14 @@ async function loadNewsDetails() {
     const params = new URLSearchParams(window.location.search);
     const newsId = params.get("id");
 
-    if (!newsId || !/^\d+$/.test(newsId)) {
-        newsDetails.textContent = "News article not found.";
+    // Bila ID: onyesha ukurasa wa habari zote
+    if (!newsId) {
+        await loadAllNews();
+        return;
+    }
+
+    if (!/^\d+$/.test(newsId)) {
+        showMessage("Invalid news article.");
         return;
     }
 
@@ -30,7 +37,7 @@ async function loadNewsDetails() {
         .maybeSingle();
 
     if (error || !data) {
-        newsDetails.textContent = "Unable to find this news article.";
+        showMessage("This news article is currently unavailable.");
         return;
     }
 
@@ -52,23 +59,20 @@ async function loadNewsDetails() {
     dateElement.className = "news-date";
     dateElement.textContent = date;
 
-    article.appendChild(heading);
-    article.appendChild(dateElement);
+    article.append(heading, dateElement);
 
     if (data.image_url) {
         const image = document.createElement("img");
-image.src = data.image_url;
-image.alt = data.title;
-image.className = "news-details-image";
-
-image.style.width = "100%";
-image.style.maxWidth = "550px";
-image.style.height = "280px";
-image.style.objectFit = "contain";
-image.style.display = "block";
-image.style.margin = "20px auto";
-
-article.appendChild(image);
+        image.src = data.image_url;
+        image.alt = data.title;
+        image.className = "news-details-image";
+        image.style.width = "100%";
+        image.style.maxWidth = "550px";
+        image.style.height = "280px";
+        image.style.objectFit = "contain";
+        image.style.display = "block";
+        image.style.margin = "20px auto";
+        article.appendChild(image);
     }
 
     const content = document.createElement("p");
@@ -77,13 +81,77 @@ article.appendChild(image);
     content.textContent = data.content;
 
     article.appendChild(content);
-
     newsDetails.replaceChildren(article);
 
     document.title = data.title + " | SALSO";
 }
 
-document.getElementById("current-year").textContent =
-    new Date().getFullYear();
+async function loadAllNews() {
+    document.title = "News & Updates | SALSO";
+
+    newsDetails.replaceChildren();
+
+    const heading = document.createElement("h1");
+    heading.textContent = "SALSO News & Updates";
+
+    const intro = document.createElement("p");
+    intro.textContent =
+        "Stay informed about the latest news, announcements, activities and events of the SAUT Law Society.";
+
+    newsDetails.append(heading, intro);
+
+    const { data, error } = await supabaseClient
+        .from("news")
+        .select("id, title, content, image_url, published_at")
+        .eq("status", "published")
+        .order("published_at", { ascending: false });
+
+    if (error) {
+        showMessage("News are temporarily unavailable. Please try again later.");
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        showMessage("There are currently no published news articles.");
+        return;
+    }
+
+    data.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "news-card";
+
+        const title = document.createElement("h2");
+        const link = document.createElement("a");
+        link.href = `news.html?id=${encodeURIComponent(item.id)}`;
+        link.textContent = item.title;
+        title.appendChild(link);
+
+        const excerpt = document.createElement("p");
+        excerpt.textContent = (item.content || "").slice(0, 180);
+
+        card.append(title, excerpt);
+
+        if (item.published_at) {
+            const date = document.createElement("p");
+            date.className = "news-date";
+            date.textContent = new Date(item.published_at)
+                .toLocaleDateString("en-GB");
+            card.appendChild(date);
+        }
+
+        newsDetails.appendChild(card);
+    });
+}
+
+function showMessage(message) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = message;
+    newsDetails.replaceChildren(paragraph);
+}
+
+const yearElement = document.getElementById("current-year");
+if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+}
 
 loadNewsDetails();
