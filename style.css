@@ -621,102 +621,59 @@ loadHomepageNews();
     margin: 20px auto !important;
 }
 
-/* =====================================
-   SALSO MOBILE HAMBURGER MENU
-===================================== */
+/* SALSO MOBILE HAMBURGER MENU */
 
 .menu-toggle {
   display: none;
   background: none;
   border: none;
   color: var(--primary);
-  font-size: 30px;
+  font-size: 28px;
   cursor: pointer;
   padding: 5px;
 }
 
-@media (max-width: 768px) {
-  .main-header {
-    position: sticky;
-    top: 0;
-    flex-wrap: wrap;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .main-header nav#main-navigation {
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 0;
-    padding: 10px 0;
-    background: var(--white);
-  }
-
-  .main-header nav#main-navigation.open {
-    display: flex;
-  }
-
-  .main-header nav#main-navigation a {
-    display: block;
-    padding: 13px 10px;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-/* SALSO MOBILE MENU FINAL FIX */
-
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
 
   .main-header {
-    display: flex;
-    flex-direction: row;
+    display: flex !important;
+    flex-direction: row !important;
     flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between !important;
+    align-items: center !important;
     position: sticky;
     top: 0;
     z-index: 1000;
   }
 
   .main-header .brand {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    text-align: left !important;
     flex: 1;
     min-width: 0;
-    gap: 10px;
   }
 
-  .main-header .menu-toggle {
-    display: block;
+  .menu-toggle {
+    display: block !important;
     margin-left: auto;
-    flex-shrink: 0;
   }
 
-  .main-header nav#main-navigation:not(.open) {
+  .main-header nav#main-navigation {
     display: none !important;
+    width: 100%;
+    flex-direction: column;
+    background: white;
   }
 
   .main-header nav#main-navigation.open {
     display: flex !important;
-    flex-direction: column;
-    align-items: stretch;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--white);
-    padding: 10px 7%;
-    box-shadow: 0 5px 12px rgba(0,0,0,.10);
   }
 
   .main-header nav#main-navigation a {
-    padding: 13px 10px;
+    display: block;
+    padding: 13px;
     border-bottom: 1px solid var(--border);
   }
 }
