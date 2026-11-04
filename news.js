@@ -7,6 +7,7 @@ const SUPABASE_URL = "https://pzmtaaliocqxnenfeagv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OQYhWvHhZKaVg8QoXa3eFg_rWO7vDi-";
 
 
+
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
@@ -14,11 +15,40 @@ const supabaseClient = window.supabase.createClient(
 
 const newsDetails = document.getElementById("news-details");
 
+// Display text while making web links clickable
+function renderContent(container, text) {
+    const urlPattern = /https?:\/\/[^\s<>"']+/gi;
+    const parts = text.split(urlPattern);
+    const urls = text.match(urlPattern) || [];
+
+    parts.forEach((part, index) => {
+        container.appendChild(document.createTextNode(part));
+
+        if (urls[index]) {
+            let url = urls[index];
+            let trailing = "";
+
+            while (/[.,!?;:)]$/.test(url)) {
+                trailing = url.slice(-1) + trailing;
+                url = url.slice(0, -1);
+            }
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.textContent = url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+
+            container.appendChild(link);
+            container.appendChild(document.createTextNode(trailing));
+        }
+    });
+}
+
 async function loadNewsDetails() {
     const params = new URLSearchParams(window.location.search);
     const newsId = params.get("id");
 
-    // Without ID: display all published news
     if (!newsId) {
         await loadAllNews();
         return;
@@ -41,7 +71,15 @@ async function loadNewsDetails() {
         return;
     }
 
-    const date = data.published_at
+    const article = document.createElement("article");
+    article.className = "full-news-article";
+
+    const heading = document.createElement("h1");
+    heading.textContent = data.title;
+
+    const date = document.createElement("p");
+    date.className = "news-date";
+    date.textContent = data.published_at
         ? new Date(data.published_at).toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "long",
@@ -49,36 +87,21 @@ async function loadNewsDetails() {
         })
         : "";
 
-    const article = document.createElement("article");
-    article.className = "full-news-article";
-
-    const heading = document.createElement("h1");
-    heading.textContent = data.title;
-
-    const dateElement = document.createElement("p");
-    dateElement.className = "news-date";
-    dateElement.textContent = date;
-
-    article.append(heading, dateElement);
+    article.append(heading, date);
 
     if (data.image_url) {
         const image = document.createElement("img");
         image.src = data.image_url;
         image.alt = data.title;
         image.className = "news-details-image";
-        image.style.width = "100%";
-        image.style.maxWidth = "550px";
-        image.style.height = "280px";
-        image.style.objectFit = "contain";
-        image.style.display = "block";
-        image.style.margin = "20px auto";
         article.appendChild(image);
     }
 
-    const content = document.createElement("p");
+    const content = document.createElement("div");
     content.className = "news-full-content";
     content.style.whiteSpace = "pre-wrap";
-    content.textContent = data.content;
+
+    renderContent(content, data.content || "");
 
     article.appendChild(content);
     newsDetails.replaceChildren(article);
@@ -88,7 +111,6 @@ async function loadNewsDetails() {
 
 async function loadAllNews() {
     document.title = "News & Updates | SALSO";
-
     newsDetails.replaceChildren();
 
     const heading = document.createElement("h1");
@@ -121,21 +143,44 @@ async function loadAllNews() {
         card.className = "news-card";
 
         const title = document.createElement("h2");
-        const link = document.createElement("a");
-        link.href = `news.html?id=${encodeURIComponent(item.id)}`;
-        link.textContent = item.title;
-        title.appendChild(link);
+        const titleLink = document.createElement("a");
+
+        titleLink.href = `news.html?id=${encodeURIComponent(item.id)}`;
+        titleLink.textContent = item.title;
+
+        title.appendChild(titleLink);
+        card.appendChild(title);
+
+        if (item.image_url) {
+            const image = document.createElement("img");
+            image.src = item.image_url;
+            image.alt = item.title;
+            image.className = "news-card-image";
+            card.appendChild(image);
+        }
 
         const excerpt = document.createElement("p");
-        excerpt.textContent = (item.content || "").slice(0, 180);
+        const fullText = item.content || "";
 
-        card.append(title, excerpt);
+        excerpt.textContent = fullText.length > 180
+            ? fullText.slice(0, 180).trim() + "..."
+            : fullText;
+
+        card.appendChild(excerpt);
+
+        const readMore = document.createElement("a");
+        readMore.href = `news.html?id=${encodeURIComponent(item.id)}`;
+        readMore.textContent = "Read More →";
+        readMore.className = "read-more";
+
+        card.appendChild(readMore);
 
         if (item.published_at) {
             const date = document.createElement("p");
             date.className = "news-date";
             date.textContent = new Date(item.published_at)
                 .toLocaleDateString("en-GB");
+
             card.appendChild(date);
         }
 
@@ -150,8 +195,10 @@ function showMessage(message) {
 }
 
 const yearElement = document.getElementById("current-year");
+
 if (yearElement) {
     yearElement.textContent = new Date().getFullYear();
 }
 
 loadNewsDetails();
+
