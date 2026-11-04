@@ -140,3 +140,33 @@ window.addEventListener("scroll", () => {
     }
   });
 });
+
+// =====================================
+// SALSO MOBILE MENU FUNCTIONALITY
+// =====================================
+
+const menuToggle = document.getElementById("menu-toggle");
+const mainNavigation = document.getElementById("main-navigation");
+
+if (menuToggle && mainNavigation) {
+  menuToggle.addEventListener("click", () => {
+    const isOpen = mainNavigation.classList.toggle("open");
+
+    menuToggle.setAttribute("aria-expanded", isOpen);
+    menuToggle.setAttribute(
+      "aria-label",
+      isOpen ? "Close navigation menu" : "Open navigation menu"
+    );
+
+    menuToggle.textContent = isOpen ? "✕" : "☰";
+  });
+
+  mainNavigation.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      mainNavigation.classList.remove("open");
+      menuToggle.textContent = "☰";
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open navigation menu");
+    });
+  });
+}
