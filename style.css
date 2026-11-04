@@ -737,12 +737,16 @@ footer a:hover {
     text-decoration: underline !important;
 }
 /* SALSO MOBILE HAMBURGER VISIBILITY */
+/* SALSO HAMBURGER ICON */
 #menu-toggle {
     color: #FFFFFF !important;
-    background: transparent !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    background: #5B1725 !important;
     border: 1px solid #FFFFFF !important;
+    opacity: 1 !important;
+    font-size: 26px !important;
+    font-weight: bold !important;
 }
-
 #menu-toggle:hover {
     background: #7A1F32 !important;
 }
