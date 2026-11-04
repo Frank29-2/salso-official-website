@@ -736,3 +736,30 @@ footer a:hover {
 .news-card .read-more:hover {
     text-decoration: underline !important;
 }
+/* SALSO MOBILE HAMBURGER VISIBILITY */
+#menu-toggle {
+    color: #FFFFFF !important;
+    background: transparent !important;
+    border: 1px solid #FFFFFF !important;
+}
+
+#menu-toggle:hover {
+    background: #7A1F32 !important;
+}
+/* SALSO MOBILE OPEN MENU */
+@media (max-width: 768px) {
+    #main-navigation.open {
+        background-color: #5B1725 !important;
+    }
+
+    #main-navigation.open a {
+        color: #FFFFFF !important;
+        background-color: transparent !important;
+        text-decoration: none !important;
+    }
+
+    #main-navigation.open a:hover,
+    #main-navigation.open a.active {
+        color: #D4AF37 !important;
+    }
+}
