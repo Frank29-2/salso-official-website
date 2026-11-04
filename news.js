@@ -18,7 +18,7 @@ async function loadNewsDetails() {
     const params = new URLSearchParams(window.location.search);
     const newsId = params.get("id");
 
-    // Bila ID: onyesha ukurasa wa habari zote
+    // Without ID: display all published news
     if (!newsId) {
         await loadAllNews();
         return;
