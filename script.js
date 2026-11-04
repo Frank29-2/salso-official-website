@@ -86,18 +86,29 @@ async function loadHomepageNews() {
     : "";
 
         
+
+const preview = (item.content || "").length > 160
+    ? (item.content || "").slice(0, 160).trim() + "..."
+    : (item.content || "");
+
 return `
-    <a href="news.html?id=${encodeURIComponent(item.id)}" class="news-card-link">
-        <article class="news-card">
-            ${image}
-            <div class="news-card-content">
-                <p class="news-date">${escapeHTML(date)}</p>
-                <h3>${escapeHTML(item.title)}</h3>
-                <p>${escapeHTML(item.content)}</p>
-                <span class="read-more">Read Full Story →</span>
-            </div>
-        </article>
-    </a>
+    <article class="news-card">
+        ${image}
+        <div class="news-card-content">
+            <p class="news-date">${escapeHTML(date)}</p>
+            <h3>
+                <a href="news.html?id=${encodeURIComponent(item.id)}"
+                   class="news-title-link">
+                    ${escapeHTML(item.title)}
+                </a>
+            </h3>
+            <p>${escapeHTML(preview)}</p>
+            <a href="news.html?id=${encodeURIComponent(item.id)}"
+               class="read-more">
+                Read Full Story →
+            </a>
+        </div>
+    </article>
 `;
 
     }).join("");
