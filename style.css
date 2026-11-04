@@ -651,3 +651,8 @@ footer a:hover {
     text-align: center;
   }
 }
+header,
+.header,
+.navbar {
+    background-color: #F5EFE3 !important;
+}
