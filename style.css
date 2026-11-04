@@ -714,3 +714,25 @@ footer a:hover {
     text-decoration: underline;
     overflow-wrap: anywhere;
 }
+
+/* SALSO HOMEPAGE NEWS DESIGN */
+.news-title-link,
+.news-card-link {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.news-title-link:hover {
+    color: #7A1F32 !important;
+    text-decoration: none !important;
+}
+
+.news-card .read-more {
+    color: #7A1F32;
+    text-decoration: none !important;
+    font-weight: 600;
+}
+
+.news-card .read-more:hover {
+    text-decoration: underline !important;
+}
