@@ -105,3 +105,38 @@ return `
 
 loadHomepageNews();
 
+
+// =====================================
+// SALSO SCROLL-AWARE NAVIGATION
+// =====================================
+
+const pageSections = document.querySelectorAll(
+  "section[id]"
+);
+
+const navLinks = document.querySelectorAll(
+  '.main-header nav a[href*="#"]'
+);
+
+window.addEventListener("scroll", () => {
+  let currentSection = "";
+
+  pageSections.forEach((section) => {
+    const sectionTop = section.offsetTop - 130;
+
+    if (window.scrollY >= sectionTop) {
+      currentSection = section.getAttribute("id");
+    }
+  });
+
+  navLinks.forEach((link) => {
+    link.classList.remove("active");
+
+    if (
+      currentSection &&
+      link.getAttribute("href").endsWith("#" + currentSection)
+    ) {
+      link.classList.add("active");
+    }
+  });
+});
