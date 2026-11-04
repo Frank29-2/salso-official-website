@@ -668,3 +668,49 @@ footer a:hover {
 .main-header span {
     color: #FFFFFF !important;
 }
+
+/* SALSO NEWS LINKS */
+.news-card h2 a {
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.news-card h2 a:hover {
+    color: #8B2635;
+}
+
+.read-more {
+    display: inline-block;
+    color: #7A1F32;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+.news-card-image {
+    width: 100%;
+    max-width: 550px;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    margin: 15px 0;
+}
+
+.news-details-image {
+    width: 100%;
+    max-width: 550px;
+    height: 280px;
+    object-fit: contain;
+    display: block;
+    margin: 20px auto;
+}
+
+.news-full-content a {
+    color: #7A1F32;
+    text-decoration: underline;
+    overflow-wrap: anywhere;
+}
