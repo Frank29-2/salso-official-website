@@ -651,8 +651,7 @@ footer a:hover {
     text-align: center;
   }
 }
-header,
-.header,
-.navbar {
-    background-color: #F5EFE3 !important;
+/* SALSO HEADER BACKGROUND */
+.main-header {
+    background: #F5EFE3 !important;
 }
