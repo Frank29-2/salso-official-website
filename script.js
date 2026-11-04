@@ -114,7 +114,84 @@ return `
     }).join("");
 }
 
+
+async function loadHomepageNews() {
+    const newsGrid = document.getElementById("news-grid");
+    if (!newsGrid) return;
+
+    newsGrid.innerHTML = "<p>Loading latest news...</p>";
+
+    const { data, error } = await supabaseClient
+        .from("news")
+        .select("id, title, content, image_url, published_at")
+        .eq("status", "published")
+        .order("published_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+        newsGrid.textContent = error
+            ? "Unable to load news at the moment."
+            : "No news published yet.";
+        return;
+    }
+
+    const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+
+    newsGrid.classList.add("news-slider");
+
+    newsGrid.innerHTML = data.map((item, index) => {
+        const date = item.published_at
+            ? new Date(item.published_at).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            })
+            : "";
+
+        const image = item.image_url
+            ? `<img src="${escapeHTML(item.image_url)}" alt="${escapeHTML(item.title)}" class="news-image">`
+            : "";
+
+        const content = item.content || "";
+        const preview = content.length > 160
+            ? content.slice(0, 160).trim() + "..."
+            : content;
+
+        return `
+            <article class="news-card news-slide ${index === 0 ? "active" : ""}">
+                <a href="news.html?id=${encodeURIComponent(item.id)}"
+                   class="news-title-link">
+                    ${image}
+                    <div class="news-card-content">
+                        <p class="news-date">${escapeHTML(date)}</p>
+                        <h3>${escapeHTML(item.title)}</h3>
+                        <p>${escapeHTML(preview)}</p>
+                        <span class="read-more">Read Full Story →</span>
+                    </div>
+                </a>
+            </article>
+        `;
+    }).join("");
+
+    let currentSlide = 0;
+    const slides = newsGrid.querySelectorAll(".news-slide");
+
+    if (slides.length > 1) {
+        setInterval(() => {
+            slides[currentSlide].classList.remove("active");
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add("active");
+        }, 3000);
+    }
+}
+
 loadHomepageNews();
+
 
 
 // =====================================
